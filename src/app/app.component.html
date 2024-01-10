@@ -1,13 +1,13 @@
 <mat-form-field>
   <mat-label>Filter</mat-label>
-  <input matInput (keyup)="applyFilterFirstName($event)" placeholder="Ex. ium" #input>
+  <input matInput (input)="applyFilterFirstName($event)" placeholder="Ex. ium" #input>
 </mat-form-field>
 
 <mat-form-field>
   <mat-label>Filter</mat-label>
-  <input matInput (keyup)="applyFilterLastName($event)" placeholder="Ex. ium" #input>
+  <input matInput (input)="applyFilterLastName($event)" placeholder="Ex. ium" #input>
 </mat-form-field>
-
+<button (click)="onSubmit()">Filter</button>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!--- Note that these columns can be defined in any order.
