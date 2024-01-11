@@ -1,13 +1,30 @@
-<mat-form-field>
-  <mat-label>Filter</mat-label>
-  <input matInput (input)="applyFilterFirstName($event)" placeholder="Ex. ium" #input>
-</mat-form-field>
+<form [formGroup]="filterForm">
+  <div mat-dialog-content >
+    <div class="form-group">
+      <label for="">Name</label>
+      <mat-form-field class="example-full-width">
+        <input matInput formControlName="name" placeholder="Enter name" />
+      </mat-form-field>
+    </div>
+    <div class="form-group">
+      <label for="">Email</label>
+      <mat-form-field class="example-full-width">
+        <input matInput formControlName="weight" placeholder="Enter email" />
+      </mat-form-field>
+    </div>
+    <div class="modal-inforce__footer">
+      <button
+        type="submit"
+        (click)="getFormsValue()"
+        mat-button 
+        class="primary"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</form>
 
-<mat-form-field>
-  <mat-label>Filter</mat-label>
-  <input matInput (input)="applyFilterLastName($event)" placeholder="Ex. ium" #input>
-</mat-form-field>
-<button (click)="onSubmit()">Filter</button>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!--- Note that these columns can be defined in any order.
