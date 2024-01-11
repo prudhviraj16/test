@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ELEMENT_DATA, PeriodicElement } from './app.module';
 import { MatTableDataSource } from '@angular/material/table';
- 
+import { FormControl, FormGroup } from '@angular/forms';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,34 +14,48 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AppComponent {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-  public filteredDataSource: any
-  public filters = {
+  filterForm = new FormGroup({
+    name: new FormControl(),
+    weight: new FormControl(),
+  });
+  public filterValues = {
     name : '',
     weight : ''
   }
 
-  applyFilterFirstName(event: Event) {
-    this.filters = {...this.filters, name : (event.target as HTMLInputElement).value}
+  get name() { return this.filterForm.get('name'); }
+  get weight() { return this.filterForm.get('weight'); }
+
+
+  ngOnInit(){
+    this.formSubscribe();
+    this.getFormsValue();
   }
 
-  applyFilterLastName(event : Event) {
-    this.filters = {...this.filters, weight : (event.target as HTMLInputElement).value}
+  formSubscribe() {
+    this.name?.valueChanges.subscribe((nameValue:string) => {
+        this.filterValues['name'] = nameValue
+        this.dataSource.filter = JSON.stringify(this.filterValues);
+    });
+    
+    this.weight?.valueChanges.subscribe((emailValue: string) => {
+        this.filterValues['weight'] = emailValue
+        this.dataSource.filter = JSON.stringify(this.filterValues);
+    });
   }
 
-  onSubmit() {
-    let filterValues = '';
-    if(this.filters.name) {
-      const filterValue = this.filters.name;
-      filterValues = filterValue.trim().toLowerCase();
+  getFormsValue() {
+    this.dataSource.filterPredicate = (data, filter: string): boolean => {
+      let searchString = JSON.parse(filter);
+
+      const resultValue =
+        data.name?.toString().trim().toLowerCase().indexOf(searchString?.name.toLowerCase()) !== -1 &&
+        data.weight?.toString().trim().toLowerCase().indexOf(searchString?.weight.toLowerCase()) !== -1
+        
+      return resultValue;
+
     }
-   
-    if(this.filters.weight) {
-      const filterValue = this.filters.weight;
-      filterValues = filterValue.trim();
-    }
-   
-    this.dataSource.filter = filterValues;
-    this.dataSource.filterPredicate = (data: PeriodicElement, filter: string) : any => 
-      data.name.toLowerCase().includes(filter) || data.weight.includes(filter);
+    this.dataSource.filter = JSON.stringify(this.filterValues);
   }
+
 }
